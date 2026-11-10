@@ -1,0 +1,142 @@
+[project]
+license = { text = "" }
+name = "teaching_load"
+version = "0.1.0"
+description = "Suivi du plan de charge enseignant (Makersboard + ADE, DuckDB, Streamlit)"
+readme = "README.md"
+authors = [
+    { name = "Cao Tri DO", email = "astrodata.co@gmail.com" },
+]
+maintainers = [
+    { name = "Cao Tri DO", email = "astrodata.co@gmail.com" },
+]
+keywords = ["python", "astrodata", "data-science"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.12.0"
+
+dependencies = [
+    "duckdb>=1.1.0",
+    "icalendar>=6.0.0",
+    "loguru>=0.7.3",
+    "pandas>=3.1.1",
+    "plotly>=5.24.0",
+    "pydantic>=2.14.3",
+    "pydantic-settings>=2.16.2",
+    "python-dotenv>=1.2.4",
+    "requests>=2.32.0",
+    "streamlit>=1.54.0,<1.57.0",
+]
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.19.3",
+    "gitingest>=0.3.1",
+    "mypy>=2.4.1",
+    "pip-licenses>=5.5.5",
+    "pre-commit>=4.7.0",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.17.0",
+    "ruff>=0.17.4",
+]
+
+[project.scripts]
+teaching_load-sync = "teaching_load.core.data_io.sync:main"
+
+[build-system]
+requires = ["setuptools>=68.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = { find = { where = ["src"] } }
+
+[tool.ruff]
+line-length = 120
+lint.select = [
+    "F",   # pyflakes rules
+    "E",   # pycodestyle error rules
+    "W",   # pycodestyle warning rules
+    "B",   # flake8-bugbear rules
+    "I",   # isort rules
+    "UP",  # pyupgrade rules
+    "SIM", # flake8-simplify rules
+    "ERA", # eradicate rules
+    "C",   # pylint convention rules
+    "D",   # pydocstyle rules
+    "ANN", # flake8-annotations rules
+]
+lint.ignore = [
+    "D107",   # Missing docstring in `__init__`
+    "D203",   # incorrect-blank-line-before-class
+    "D213",   # multi-line-summary-second-line
+    "C901",   # too complex
+    "ERA001", # commented out code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E501", "D", "ANN", "S101"]
+"app/**" = ["ANN", "D103", "E501"]
+
+[tool.ruff.format]
+indent-style = "space"
+docstring-code-format = true
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+# Add Pydantic plugin to avoid false positive from the FastAPI model
+plugins = ["pydantic.mypy"]
+# Strict config for Pydantic
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["ci_exclude: Tests excluded from CI/CD pipeline"]
+addopts = [
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=xml:coverage.xml",
+    "--cov-fail-under=80",
+        "--junitxml=report.xml",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+]
+# Ignore empty files
+omit = ["**/__init__.py"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "v$version"
+version_files = ["VERSION", "pyproject.toml:^version ="]
+bump_message = "chore(release): bump version $current_version → $new_version"
+update_changelog_on_bump = true
+changelog_incremental = true
+pre_bump_hooks = ["uv sync", "git add uv.lock"]
+changelog_file = "CHANGELOG.md"
+changelog_title = "# Changelog \\n\\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\\n\\n## [Unreleased]\\n"
+changelog_message_template = """
+
+## {{version}} - {{date}}
+
+{{#each commits}}
+- {{message}}
+{{/each}}
+
+"""
+
+[project.urls]
+homepage = "https://github.com/your-org/your-repo"

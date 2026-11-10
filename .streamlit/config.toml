@@ -1,0 +1,28 @@
+[theme]
+# Harmonization with style.css
+# primaryColor = "#667eea"
+# backgroundColor = "#ffffff"
+# secondaryBackgroundColor = "#f0f4f8"
+# textColor = "#1e293b"
+# font = "sans serif"
+
+[client]
+# "Enterprise" feel (hides dev tools)
+toolbarMode = "minimal"
+showErrorDetails = false
+
+[browser]
+# Navigation and privacy optimization
+gatherUsageStats = false
+# showSidebarNavigation = false
+
+[server]
+# Server performance optimization
+# compressResponse = true
+# enableCORS = false
+enableXsrfProtection = true
+maxUploadSize = 50
+
+[ui]
+# Hide remaining native elements (version dependent)
+hideTopBar = true
